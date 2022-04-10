@@ -1,5 +1,7 @@
 import os
 import warnings
+from tqdm import tqdm
+import string
 import openpyxl
 from openpyxl.utils import get_column_letter
 
@@ -52,14 +54,14 @@ def check_start_a(ws):
 
 
 def check_start_f(ws):
-    col_range = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    col_range = list(string.ascii_lowercase)
     for i, n in enumerate(col_range):
         if ws['{}2'.format(n)].value:
             return col_range[i], col_range[i - 1]
 
 def check_for_hide_colums(n, e, ws):
     to_hide = []
-    col_range = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+    col_range = list(string.ascii_lowercase)
     for i, col in enumerate(col_range):
         if '[Attr' in str(ws['{}{}'.format(col,n)].value):
             to_hide.append(col)
@@ -85,13 +87,17 @@ def hide_rows(to_hide, ws):
         ws.row_dimensions[row].hidden = True     
     return ws    
 
-
-if __name__ == '__main__':
-    dir_list = os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "work", ""))
-
-    for filename in dir_list:
-        print("---------" + filename)
-        wb = openpyxl.load_workbook(os.path.join(os.path.dirname(os.path.realpath(__file__)), "work", filename))
+def main():
+    done_folder = "done"
+    work_folder = "work"
+    full_work_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), work_folder, "")
+    dir_list = []
+    print("Formatting all *.xlsx files found in {}".format(full_work_folder))
+    for file in  os.listdir(full_work_folder):
+        if file.endswith(".xlsx"):
+            dir_list.append(os.path.join(os.path.join(full_work_folder, file)))
+    for filename in tqdm(dir_list):
+        wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
             ws = wb[ws_name]
             for i, row in enumerate(ws.rows):
@@ -106,8 +112,10 @@ if __name__ == '__main__':
             ws = hide_rows(to_hide, ws)    
             set_border(ws, 'A{}:{}{}'.format(n, e, end))
             set_border(ws, '{}1:{}{}'.format(m, col, end))
-
             set_header(ws, 'A{}:{}{}'.format(n, e, n))
             set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+        wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-        wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), "done", filename))
+
+if __name__ == '__main__':
+    main()
