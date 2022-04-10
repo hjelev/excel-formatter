@@ -33,7 +33,7 @@ def check_end(ws):
             pass
         else:
             no_end = False
-            return i
+            return i - 1
         i += 1
 
 
@@ -99,7 +99,7 @@ def main():
             dir_list.append(file)
 
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
-    
+
     for filename in tqdm(dir_list):
         wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
