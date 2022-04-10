@@ -88,6 +88,7 @@ def hide_rows(to_hide, ws):
     return ws    
 
 def main():
+    default_column_width = 25
     done_folder = "done"
     work_folder = "work"
     full_work_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), work_folder, "")
@@ -96,13 +97,15 @@ def main():
     for file in  os.listdir(full_work_folder):
         if file.endswith(".xlsx"):
             dir_list.append(file)
+
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
+    
     for filename in tqdm(dir_list):
         wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
             ws = wb[ws_name]
             for i in list(string.ascii_lowercase):
-                ws.column_dimensions[i].width = 25
+                ws.column_dimensions[i].width = default_column_width
             n = check_start_a(ws) # start of first block
             m, e = check_start_f(ws) # m = start colum of second block; e = end colum of first block; 
             end = check_end(ws) # end of first block
