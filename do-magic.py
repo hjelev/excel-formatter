@@ -100,7 +100,7 @@ def main():
 
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
 
-    for filename in tqdm(dir_list):
+    for filename in tqdm(dir_list, desc ="Work done: "):
         wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
             ws = wb[ws_name]
