@@ -6,7 +6,7 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-import enquiries
+from pick import pick
 
 warnings.simplefilter("ignore")
 
@@ -117,10 +117,11 @@ def format_first_type(ws):
 
 
 def menu():
-    options = ['Format Type 1', 'Format Type 2', 'Format Type 3']
-    choice = enquiries.choose('Choose which template to use: ', options)
+    title = 'Please choose your favorite programming language: '
+    options = ['Template 1', 'Template 2']
+    option, index = pick(options, title)
 
-    return choice
+    return index
 
 def main():
     file_type = menu()
@@ -140,7 +141,7 @@ def main():
         wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
             ws = wb[ws_name]
-            if file_type == 'Format Type 1':
+            if file_type == 1:
                 ws = format_first_type(ws)
             else:
                 exit()
