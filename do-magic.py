@@ -6,7 +6,6 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
-from pick import pick
 
 warnings.simplefilter("ignore")
 
@@ -126,6 +125,8 @@ def format_information_result(ws, last_tab):
     
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
+        if ws['a1'].value == "ID" and i == "a":
+            ws.column_dimensions[i].width = "3"
     ws.column_dimensions[last_tab].width = 3
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
     set_header(ws, 'A1:{}1'.format(last_tab))
@@ -133,12 +134,38 @@ def format_information_result(ws, last_tab):
     
     return ws
 
+
+def format_status_table(ws, last_tab):
+    default_column_width = 37
+    
+    for i in list(string.ascii_lowercase):
+        ws.column_dimensions[i].width = default_column_width
+        if "IDENTIFIER" in str(ws['{}2'.format(i)].value) or ws['{}1'.format(i)].value == "to":
+            ws.column_dimensions[i].width = "4"
+    # ws.column_dimensions[last_tab].width = 3
+    # ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
+    set_header(ws, 'A1:{}1'.format(last_tab))
+    ws.freeze_panes = ws['a2']
+    
+    return ws
+
+
 # def menu():
 #     title = 'Please choose your favorite programming language: '
 #     options = ['Template 1', 'Template 2']
 #     option, index = pick(options, title)
 
     return index
+
+def find_last_tab_2(ws):
+    col_range = list(string.ascii_lowercase)
+    # print(str(ws.title),"------- title ----------------")
+    for c in col_range:
+        # print(ws['{}2'.format(c)].value)
+        if "Document Status" in str(ws['{}1'.format(c)].value) and c != "a" :
+            # print("found",c, ws.title)
+            return next_alpha(c)
+    return "f"
 
 
 def find_last_tab(ws):
@@ -153,8 +180,6 @@ def find_last_tab(ws):
 
 
 def main():
-    file_type = 1
-    default_column_width = 25
     done_folder = "done"
     work_folder = "work"
     full_work_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), work_folder, "")
@@ -182,7 +207,15 @@ def main():
                     ws = wb[ws_name]
                     ws = format_information_result(ws, find_last_tab(ws))
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-
+        elif "Status Transformation Table" in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for ws_name in wb.sheetnames:
+                if "Recap" not in ws_name:
+                    # last_tab = find_last_tab(ws)
+                    # print(last_tab)
+                    ws = wb[ws_name]
+                    ws = format_status_table(ws, find_last_tab_2(ws))
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
 
 
