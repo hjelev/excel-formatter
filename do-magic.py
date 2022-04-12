@@ -119,7 +119,6 @@ def next_alpha(s):
     return chr((ord(s.upper())+1 - 65) % 26 + 65)
 
 
-
 def format_information_result(ws, last_tab):
     default_column_width = 20
     
@@ -155,32 +154,18 @@ def format_status_table(ws, last_tab):
             ws['{}1'.format(i)].alignment = Alignment(horizontal='left')
     return ws
 
-
-# def menu():
-#     title = 'Please choose your favorite programming language: '
-#     options = ['Template 1', 'Template 2']
-#     option, index = pick(options, title)
-
-    return index
-
 def find_last_tab_2(ws):
     col_range = list(string.ascii_lowercase)
-    # print(str(ws.title),"------- title ----------------")
     for c in col_range:
-        # print(ws['{}2'.format(c)].value)
         if "Document Status" in str(ws['{}1'.format(c)].value) and c != "a" :
-            # print("found",c, ws.title)
             return next_alpha(c)
     return "f"
 
 
 def find_last_tab(ws):
     col_range = list(string.ascii_lowercase)
-    # print(str(ws.title),"------- title ----------------")
     for c in col_range:
-        # print(ws['{}1'.format(c)].value)
         if  "CERTEX" in str(ws['{}1'.format(c)].value):
-            # print("found",c, ws.title)
             return c
     return "d"
 
@@ -208,8 +193,6 @@ def main():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 if "Recap" not in ws_name:
-                    # last_tab = find_last_tab(ws)
-                    # print(last_tab)
                     ws = wb[ws_name]
                     ws = format_information_result(ws, find_last_tab(ws))
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
@@ -217,8 +200,6 @@ def main():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 if "Statuses" not in ws_name:
-                    # last_tab = find_last_tab(ws)
-                    # print(last_tab)
                     ws = wb[ws_name]
                     ws = format_status_table(ws, find_last_tab_2(ws))
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
