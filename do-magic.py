@@ -116,15 +116,44 @@ def format_first_type(ws):
     return ws
 
 
-def menu():
-    title = 'Please choose your favorite programming language: '
-    options = ['Template 1', 'Template 2']
-    option, index = pick(options, title)
+def next_alpha(s):
+    return chr((ord(s.upper())+1 - 65) % 26 + 65)
+
+
+
+def format_information_result(ws, last_tab):
+    default_column_width = 20
+    
+    for i in list(string.ascii_lowercase):
+        ws.column_dimensions[i].width = default_column_width
+    ws.column_dimensions[last_tab].width = 3
+    ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
+    set_header(ws, 'A1:{}1'.format(last_tab))
+    ws.freeze_panes = ws['a2']
+    
+    return ws
+
+# def menu():
+#     title = 'Please choose your favorite programming language: '
+#     options = ['Template 1', 'Template 2']
+#     option, index = pick(options, title)
 
     return index
 
+
+def find_last_tab(ws):
+    col_range = list(string.ascii_lowercase)
+    # print(str(ws.title),"------- title ----------------")
+    for c in col_range:
+        # print(ws['{}1'.format(c)].value)
+        if  "CERTEX" in str(ws['{}1'.format(c)].value):
+            # print("found",c, ws.title)
+            return c
+    return "d"
+
+
 def main():
-    file_type = menu()
+    file_type = 1
     default_column_width = 25
     done_folder = "done"
     work_folder = "work"
@@ -138,16 +167,24 @@ def main():
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
 
     for filename in tqdm(dir_list, desc ="Work done: "):
-        wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
-        for ws_name in wb.sheetnames:
-            ws = wb[ws_name]
-            if file_type == 1:
+        if "Transformation Table" in filename and "Status" not in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for ws_name in wb.sheetnames:
+                ws = wb[ws_name]
                 ws = format_first_type(ws)
-            else:
-                exit()
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+        elif "Information Result" in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for ws_name in wb.sheetnames:
+                if "Recap" not in ws_name:
+                    # last_tab = find_last_tab(ws)
+                    # print(last_tab)
+                    ws = wb[ws_name]
+                    ws = format_information_result(ws, find_last_tab(ws))
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-            
-        wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+
+
 
 
 if __name__ == '__main__':
