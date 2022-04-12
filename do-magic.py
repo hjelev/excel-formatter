@@ -4,6 +4,8 @@ from tqdm import tqdm
 import string
 import openpyxl
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment
+from openpyxl.styles import Font
 
 warnings.simplefilter("ignore")
 
@@ -118,7 +120,12 @@ def main():
             set_border(ws, '{}1:{}{}'.format(m, col, end))
             set_header(ws, 'A{}:{}{}'.format(n, e, n))
             set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+            ws['A1'].alignment = Alignment(horizontal='center')
+            ws['A1'].alignment = Alignment(wrap_text=True)
+            ws['A1'].font = Font(size=9)
+            ws.merge_cells('A1:{}{}'.format(e, n -1))
             ws.freeze_panes = '{}{}'.format(x, n+1)
+            
         wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
 
