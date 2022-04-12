@@ -138,15 +138,19 @@ def format_information_result(ws, last_tab):
 def format_status_table(ws, last_tab):
     default_column_width = 37
     
+
+    # ws.column_dimensions[last_tab].width = 3
+    ws.merge_cells('b1:c1')
+    ws.merge_cells('e1:f1')
+    set_header(ws, 'A1:{}2'.format(last_tab))
+    ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
+        if i == "a" : ws.column_dimensions[i].width = "12"
         if "IDENTIFIER" in str(ws['{}2'.format(i)].value) or ws['{}1'.format(i)].value == "to":
             ws.column_dimensions[i].width = "4"
-    # ws.column_dimensions[last_tab].width = 3
-    # ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
-    set_header(ws, 'A1:{}1'.format(last_tab))
-    ws.freeze_panes = ws['a2']
-    
+            ws['{}2'.format(i)].alignment = Alignment(horizontal='left')
+            ws['{}1'.format(i)].alignment = Alignment(horizontal='left')
     return ws
 
 
@@ -210,7 +214,7 @@ def main():
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
-                if "Recap" not in ws_name:
+                if "Statuses" not in ws_name:
                     # last_tab = find_last_tab(ws)
                     # print(last_tab)
                     ws = wb[ws_name]
