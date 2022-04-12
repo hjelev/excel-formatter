@@ -6,6 +6,7 @@ import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
+import enquiries
 
 warnings.simplefilter("ignore")
 
@@ -111,9 +112,18 @@ def format_first_type(ws):
     ws['A1'].font = Font(size="9", bold=True, italic=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
     ws.freeze_panes = '{}{}'.format(x, n+1)
+
     return ws
 
+
+def menu():
+    options = ['Format Type 1', 'Format Type 2', 'Format Type 3']
+    choice = enquiries.choose('Choose which template to use: ', options)
+
+    return choice
+
 def main():
+    file_type = menu()
     default_column_width = 25
     done_folder = "done"
     work_folder = "work"
@@ -130,7 +140,10 @@ def main():
         wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
         for ws_name in wb.sheetnames:
             ws = wb[ws_name]
-            ws = format_first_type(ws)
+            if file_type == 'Format Type 1':
+                ws = format_first_type(ws)
+            else:
+                exit()
 
             
         wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
