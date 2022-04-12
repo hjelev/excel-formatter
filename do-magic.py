@@ -122,7 +122,9 @@ def main():
             set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
             ws['A1'].alignment = Alignment(horizontal='center')
             ws['A1'].alignment = Alignment(wrap_text=True)
-            ws['A1'].font = Font(size=9)
+            ws['A1'].font = Font(size=8)
+            ws['A1'].font = Font(bold=True)
+            ws['A1'].font = Font(italic=True)
             ws.merge_cells('A1:{}{}'.format(e, n -1))
             ws.freeze_panes = '{}{}'.format(x, n+1)
             
