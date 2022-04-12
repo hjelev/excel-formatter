@@ -137,11 +137,13 @@ def format_information_result(ws, last_tab):
 
 def format_status_table(ws, last_tab):
     default_column_width = 37
-    
 
-    # ws.column_dimensions[last_tab].width = 3
     ws.merge_cells('b1:c1')
     ws.merge_cells('e1:f1')
+    if str(ws['b1'].value) == 'None':
+        ws['b1'].value = ws['a1'].value
+        ws['b1'].font = Font(bold=True, name='Dialog.bold')
+        ws['a1'].value = ""
     set_header(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
@@ -221,8 +223,6 @@ def main():
                     ws = format_status_table(ws, find_last_tab_2(ws))
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-
-
-
+ 
 if __name__ == '__main__':
     main()
