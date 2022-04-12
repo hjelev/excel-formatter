@@ -57,7 +57,7 @@ def check_start_f(ws):
     col_range = list(string.ascii_lowercase)
     for i, n in enumerate(col_range):
         if ws['{}2'.format(n)].value:
-            return col_range[i], col_range[i - 1]
+            return col_range[i], col_range[i - 1], col_range[i + 1]
 
 def check_for_hide_colums(n, e, ws):
     to_hide = []
@@ -107,9 +107,9 @@ def main():
             for i in list(string.ascii_lowercase):
                 ws.column_dimensions[i].width = default_column_width
             n = check_start_a(ws) # start of first block
-            m, e = check_start_f(ws) # m = start colum of second block; e = end colum of first block; 
+            m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
             end = check_end(ws) # end of first block
-            col = check_max_col(ws) # end colum
+            col = check_max_col(ws) # end column
             to_hide = check_for_hide_colums(n, e, ws)
             ws = hide_cols(to_hide, ws)
             to_hide = check_for_hide_rows(n, m, ws)
@@ -118,6 +118,7 @@ def main():
             set_border(ws, '{}1:{}{}'.format(m, col, end))
             set_header(ws, 'A{}:{}{}'.format(n, e, n))
             set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+            ws.freeze_panes = '{}{}'.format(x, n+1)
         wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
 
