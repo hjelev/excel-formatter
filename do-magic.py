@@ -111,7 +111,6 @@ def format_first_type(ws):
     ws['A1'].font = Font(size="9", bold=True, italic=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
     ws.freeze_panes = '{}{}'.format(x, n+1)
-
     return ws
 
 
@@ -140,18 +139,15 @@ def format_information_result(ws, last_tab):
             for row in range(1, end):
                 ws['{}{}'.format(i, row)].alignment = Alignment(horizontal='center')
 
-
     ws.column_dimensions[last_tab].width = 5
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
     set_header(ws, 'A1:{}1'.format(last_tab))
     ws.freeze_panes = ws['a2']
-    
     return ws
 
 
 def format_status_table(ws, last_tab):
     default_column_width = 37
-
     ws.merge_cells('b1:c1')
     ws.merge_cells('e1:f1')
     if str(ws['b1'].value) == 'None':
@@ -169,6 +165,7 @@ def format_status_table(ws, last_tab):
             ws['{}2'.format(i)].alignment = Alignment(horizontal='left')
             ws['{}1'.format(i)].alignment = Alignment(horizontal='left')
     return ws
+
 
 def find_last_tab_2(ws):
     col_range = list(string.ascii_lowercase)
@@ -227,7 +224,6 @@ def main():
         elif "Spreadsheet Rules Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = list(string.ascii_lowercase)
-
             wb[wb.sheetnames[0]].freeze_panes = wb[wb.sheetnames[0]]['d6']
             wb[wb.sheetnames[0]].column_dimensions['B'].width = 63.44
             wb[wb.sheetnames[1]].freeze_panes = wb[wb.sheetnames[1]]['c6']
@@ -241,14 +237,12 @@ def main():
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.row_dimensions[2].height = 157.1
-                ws.row_dimensions[4].height = 157.1
-                
+                ws.row_dimensions[4].height = 157.1      
                 ws.sheet_view.zoomScale = 70
 
                 for column in col_range:
                     ws['{}2'.format(column)].alignment = Alignment(textRotation=90, horizontal='left', wrap_text=True)
                     ws['{}4'.format(column)].alignment = Alignment(textRotation=90, horizontal='left', wrap_text=True)
-
 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
