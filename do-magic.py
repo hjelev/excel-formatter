@@ -209,10 +209,17 @@ def main():
                 if "Recap" not in ws_name:
                     ws = wb[ws_name]
                     ws.sheet_view.zoomScale = 70
-                    ws = format_information_result(ws, find_last_tab(ws))
+                    ws = format_information_result(ws, find_last_tab(ws))                   
                 else:
                     ws = wb[ws_name]
                     ws.freeze_panes = ws['h3']
+                    ws['a1'].alignment = Alignment(horizontal='left')
+                    ws.sheet_view.zoomScale = 70
+                    ws['c2'].alignment = Alignment(horizontal='center', wrap_text=True)
+                    ws['d2'].alignment = Alignment(horizontal='center', wrap_text=True)
+                    ws['e2'].alignment = Alignment(horizontal='center', wrap_text=True)
+                    ws['f2'].alignment = Alignment(horizontal='center', wrap_text=True)
+                    ws.row_dimensions[2].height = 51
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
@@ -221,6 +228,7 @@ def main():
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_status_table(ws, find_last_tab_2(ws))
+
         elif "Spreadsheet Rules Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = list(string.ascii_lowercase)
