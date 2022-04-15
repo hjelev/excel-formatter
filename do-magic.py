@@ -22,21 +22,21 @@ def set_border(ws, cell_range):
 def set_header(ws, cell_range):
     for row in ws[cell_range]:
         for cell in row:
-            cell.fill = openpyxl.styles.PatternFill(start_color="0B5394", fill_type="solid")
-            cell.font = cell.font.copy(color="ffffff")
+            cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
+            cell.font = cell.font.copy(color="000000")
             cell.alignment = openpyxl.styles.Alignment(horizontal='center')
 
 
-def check_end(ws):
+def check_end(ws, start, col):
     no_end = True
-    i = 8
+    start = 8
     while no_end:
-        if ws['A{}'.format(i)].value:
+        if ws['{}{}'.format(col, start)].value:
             pass
         else:
             no_end = False
-            return i - 1
-        i += 1
+            return start - 1
+        start += 1
 
 
 def check_max_col(ws):
@@ -96,7 +96,7 @@ def format_first_type(ws):
         ws.column_dimensions[i].width = default_column_width
     n = check_start_a(ws) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
-    end = check_end(ws) # end of first block
+    end = check_end(ws, 8, 'A') # end of first block
     col = check_max_col(ws) # end column
     to_hide = check_for_hide_colums(n, e, ws)
     ws = hide_cols(to_hide, ws)
@@ -121,12 +121,27 @@ def next_alpha(s):
 
 def format_information_result(ws, last_tab):
     default_column_width = 20
-    
+    end = check_end(ws, 1, 'B') + 1
+    for i in range(1, end):
+        if ws['a1'].value == "ID":
+            ws['a{}'.format(i)].alignment = Alignment(horizontal='center')
+        ws['{}{}'.format(last_tab, i)].alignment = Alignment(horizontal='center')
+
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
         if ws['a1'].value == "ID" and i == "a":
-            ws.column_dimensions[i].width = "3"
-    ws.column_dimensions[last_tab].width = 3
+            ws.column_dimensions[i].width = "5"
+        if ws['{}1'.format(i)].value == "Status" :
+            ws.column_dimensions[i].width = "40"
+        if ws['{}1'.format(i)].value == "Condition" :
+            ws.column_dimensions[i].width = "28"
+        elif ws['{}1'.format(i)].value == "Process" or ws['{}1'.format(i)].value == "C/E":
+            ws.column_dimensions[i].width = "10"
+            for row in range(1, end):
+                ws['{}{}'.format(i, row)].alignment = Alignment(horizontal='center')
+
+
+    ws.column_dimensions[last_tab].width = 5
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
     set_header(ws, 'A1:{}1'.format(last_tab))
     ws.freeze_panes = ws['a2']
@@ -148,7 +163,8 @@ def format_status_table(ws, last_tab):
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
         if i == "a" : ws.column_dimensions[i].width = "12"
-        if "IDENTIFIER" in str(ws['{}2'.format(i)].value) or ws['{}1'.format(i)].value == "to":
+
+        if ("IDENTIFIER" in str(ws['{}2'.format(i)].value) or ws['{}1'.format(i)].value == "to") and (str(ws['{}3'.format(i)].value).isdigit() or str(ws['{}3'.format(i)].value) == 'None') :
             ws.column_dimensions[i].width = "4"
             ws['{}2'.format(i)].alignment = Alignment(horizontal='left')
             ws['{}1'.format(i)].alignment = Alignment(horizontal='left')
@@ -187,6 +203,7 @@ def main():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
+                ws.sheet_view.zoomScale = 70
                 ws = format_first_type(ws)
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
         elif "Information Result" in filename:
@@ -194,14 +211,45 @@ def main():
             for ws_name in wb.sheetnames:
                 if "Recap" not in ws_name:
                     ws = wb[ws_name]
+                    ws.sheet_view.zoomScale = 70
                     ws = format_information_result(ws, find_last_tab(ws))
+                else:
+                    ws = wb[ws_name]
+                    ws.freeze_panes = ws['h3']
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
-                if "Statuses" not in ws_name:
-                    ws = wb[ws_name]
-                    ws = format_status_table(ws, find_last_tab_2(ws))
+                # if "Statuses" not in ws_name:
+                ws = wb[ws_name]
+                ws.sheet_view.zoomScale = 70
+                ws = format_status_table(ws, find_last_tab_2(ws))
+        elif "Spreadsheet Rules Table" in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            col_range = list(string.ascii_lowercase)
+
+            wb[wb.sheetnames[0]].freeze_panes = wb[wb.sheetnames[0]]['d6']
+            wb[wb.sheetnames[0]].column_dimensions['B'].width = 63.44
+            wb[wb.sheetnames[1]].freeze_panes = wb[wb.sheetnames[1]]['c6']
+            wb[wb.sheetnames[2]].freeze_panes = wb[wb.sheetnames[2]]['c6']
+            wb[wb.sheetnames[3]].freeze_panes = wb[wb.sheetnames[3]]['c5']
+            wb[wb.sheetnames[4]].freeze_panes = wb[wb.sheetnames[4]]['f6']
+            wb[wb.sheetnames[5]].freeze_panes = wb[wb.sheetnames[5]]['c6']
+            wb[wb.sheetnames[6]].freeze_panes = wb[wb.sheetnames[6]]['c6']
+            wb[wb.sheetnames[7]].freeze_panes = wb[wb.sheetnames[7]]['d6']
+
+            for name in wb.sheetnames:
+                ws = wb[name]
+                ws.row_dimensions[2].height = 157.1
+                ws.row_dimensions[4].height = 157.1
+                
+                ws.sheet_view.zoomScale = 70
+
+                for column in col_range:
+                    ws['{}2'.format(column)].alignment = Alignment(textRotation=90, horizontal='left', wrap_text=True)
+                    ws['{}4'.format(column)].alignment = Alignment(textRotation=90, horizontal='left', wrap_text=True)
+
+
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
  
