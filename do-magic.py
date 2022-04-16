@@ -9,7 +9,6 @@ from openpyxl.styles import Font
 
 warnings.simplefilter("ignore")
 
-
 def set_border(ws, cell_range):
     thin = openpyxl.styles.Side(border_style="thin", color="757171")
     for row in ws[cell_range]:
