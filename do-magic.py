@@ -4,8 +4,8 @@ from tqdm import tqdm
 import string
 import openpyxl
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import Alignment
-from openpyxl.styles import Font
+from openpyxl.styles import Alignment, Font
+
 
 warnings.simplefilter("ignore")
 
@@ -15,7 +15,6 @@ def set_border(ws, cell_range):
         for cell in row:
             cell.border = openpyxl.styles.Border(top=thin, left=thin, right=thin, bottom=thin)
             cell.comment = None
-            # cell.alignment = Alignment(wrap_text=True)
 
 
 def set_header(ws, cell_range):
@@ -26,11 +25,13 @@ def set_header(ws, cell_range):
             cell.font = cell.font.copy(color="000000")
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
 
+
 def center_range(ws, cell_range):
     ws.row_dimensions[1].height = 30
     for row in ws[cell_range]:
         for cell in row:
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center', wrap_text=True)
+
 
 def set_header_font_size_14(ws, cell_range):
     ws.row_dimensions[1].height = 30
@@ -39,6 +40,7 @@ def set_header_font_size_14(ws, cell_range):
             cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
             cell.font = cell.font.copy(color="000000", size = "14")
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+
 
 def check_end(ws, start, col):
     no_end = True
@@ -73,6 +75,7 @@ def check_start_f(ws):
     for i, n in enumerate(col_range):
         if ws['{}2'.format(n)].value:
             return col_range[i], col_range[i - 1], col_range[i + 1]
+
 
 def check_for_hide_colums(n, e, ws):
     to_hide = []
@@ -270,7 +273,6 @@ def main():
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
-                # if "Statuses" not in ws_name:
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_status_table(ws, find_last_tab_2(ws))
@@ -299,9 +301,8 @@ def main():
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.sheet_view.zoomScale = 70
-                ws.row_dimensions[1].height = 30 
-                ws.row_dimensions[2].height = 180
-                ws.row_dimensions[4].height = 180
+                for row, height in [[1, 30], [2, 180], [4, 180]]:
+                    ws.row_dimensions[row].height = height
                          
                 for column in col_range:
                     ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
