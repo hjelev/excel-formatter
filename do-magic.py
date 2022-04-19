@@ -285,15 +285,16 @@ def main():
             for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6']]:
                 wb[wb.sheetnames[sheet]].freeze_panes = wb[wb.sheetnames[sheet]][cell]
 
-            wb[wb.sheetnames[0]].column_dimensions['B'].width = 63.44
-            wb[wb.sheetnames[4]].column_dimensions['B'].width = 36
-            wb[wb.sheetnames[4]].column_dimensions['C'].width = 39
-            wb[wb.sheetnames[4]].column_dimensions['D'].width = 43
-            wb[wb.sheetnames[5]].column_dimensions['A'].width = 35
-            wb[wb.sheetnames[6]].column_dimensions['A'].width = 15
-            wb[wb.sheetnames[7]].column_dimensions['A'].width = 15
+            for sheet, col, width in [[0, 'B', 63.44], [4, 'B', 36], [4, 'C', 39], [4, 'D', 43], [5, 'A', 35], [6, 'A', 15], [7, 'A', 15], [8, 'A', 15]]:
+                wb[wb.sheetnames[sheet]].column_dimensions[col].width = width
+            # wb[wb.sheetnames[4]].column_dimensions['B'].width = 36
+            # wb[wb.sheetnames[4]].column_dimensions['C'].width = 39
+            # wb[wb.sheetnames[4]].column_dimensions['D'].width = 43
+            # wb[wb.sheetnames[5]].column_dimensions['A'].width = 35
+            # wb[wb.sheetnames[6]].column_dimensions['A'].width = 15
+            # wb[wb.sheetnames[7]].column_dimensions['A'].width = 15
+            # wb[wb.sheetnames[8]].column_dimensions['A'].width = 15
 
-            wb[wb.sheetnames[8]].column_dimensions['A'].width = 15
             wb[wb.sheetnames[1]]['a6'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[2]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[3]]['a5'].value = wb[wb.sheetnames[3]]['a1'].value
