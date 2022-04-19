@@ -280,7 +280,7 @@ def main():
         elif "Spreadsheet Rules Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = column_letters()
-            
+
             for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6']]:
                 wb[wb.sheetnames[sheet]].freeze_panes = wb[wb.sheetnames[sheet]][cell]
 
@@ -290,7 +290,7 @@ def main():
             for sheet, cell in [[1, 'A6'], [2, 'A5'], [3, 'A5'], [5, 'A5'], [6, 'B5'], [7, 'B5'], [8, 'A5']]:
                 wb[wb.sheetnames[sheet]][cell].font = Font(bold=True, name='Dialog.bold', size=12)
 
-            for sheet, col_source, col_dest in [[3, 'A5', 'A1'], [6, 'B5', 'B1'], [7, 'B5', 'B1'], ]:             
+            for sheet, col_source, col_dest in [[3, 'A5', 'A1'], [6, 'B5', 'B1'], [7, 'B5', 'B1']]:             
                 wb[wb.sheetnames[sheet]][col_source].value = wb[wb.sheetnames[sheet]][col_dest].value
                 wb[wb.sheetnames[sheet]][col_dest].value = ""
 
