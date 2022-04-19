@@ -25,7 +25,13 @@ def set_header(ws, cell_range):
             cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
             cell.font = cell.font.copy(color="000000")
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
-            
+
+def center_range(ws, cell_range):
+    ws.row_dimensions[1].height = 30
+    for row in ws[cell_range]:
+        for cell in row:
+            cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center', wrap_text=True)
+
 def set_header_font_size_14(ws, cell_range):
     ws.row_dimensions[1].height = 30
     for row in ws[cell_range]:
@@ -114,7 +120,7 @@ def format_first_type(ws):
     set_header(ws, 'A{}:{}{}'.format(n, e, n))
     set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
     ws['A1'].alignment = Alignment(horizontal='left', vertical = 'top', wrap_text=True)
-    ws['A1'].font = Font(size="9", bold=True, italic=True)
+    ws['A1'].font = Font(size="9", bold=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
     ws.freeze_panes = '{}{}'.format(x, n+1)
     ws.row_dimensions[1].height = 30
@@ -202,63 +208,29 @@ def column_letters():
 def format_information_result_recap(ws):
     ws.freeze_panes = ws['h3']
     ws.sheet_view.zoomScale = 70
-    ws['a1'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
-    ws['c2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
-    ws['d2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
-    ws['e2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
-    ws['f2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True) 
+    center_range(ws, 'a1:g30')
+
     ws.row_dimensions[1].height = 30
     ws.row_dimensions[2].height = 51
-    ws.column_dimensions['A'].width = 5
-    ws.column_dimensions['H'].width = 5
-    ws.column_dimensions['K'].width = 5
-    ws.column_dimensions['R'].width = 5
-    ws.column_dimensions['U'].width = 5
-    ws.column_dimensions['X'].width = 5
-    ws.column_dimensions['AA'].width = 5
-    ws.column_dimensions['AD'].width = 5
-    ws.column_dimensions['AF'].width = 5
     ws.column_dimensions['B'].width = 43
-    ws.column_dimensions['C'].width = 17
-    ws.column_dimensions['D'].width = 17
-    ws.column_dimensions['E'].width = 17
-    ws.column_dimensions['F'].width = 17
     ws.column_dimensions['G'].width = 14
-    ws.column_dimensions['I'].width = 40
-    ws.column_dimensions['J'].width = 26
-    ws.column_dimensions['L'].width = 40
-    ws.column_dimensions['M'].width = 26
     ws.column_dimensions['N'].width = 29
-    ws.column_dimensions['O'].width = 26
-    ws.column_dimensions['P'].width = 12
-    ws.column_dimensions['Q'].width = 26
-    ws.column_dimensions['S'].width = 40
-    ws.column_dimensions['T'].width = 26
-    ws.column_dimensions['V'].width = 40
-    ws.column_dimensions['W'].width = 26
-    ws.column_dimensions['Y'].width = 40
-    ws.column_dimensions['Z'].width = 26
-    ws.column_dimensions['AB'].width = 40
-    ws.column_dimensions['AC'].width = 26
-    ws.column_dimensions['AD'].width = 40
-    ws.column_dimensions['AE'].width = 26
     ws.column_dimensions['AG'].width = 29
-    ws.column_dimensions['AH'].width = 26
-    ws.merge_cells('A1:B1')
-    ws.merge_cells('C1:F1')
-    ws.merge_cells('H1:J1')
-    ws.merge_cells('K1:M1')
-    ws.merge_cells('N1:O1')
-    ws.merge_cells('P1:Q1')
-    ws.merge_cells('R1:T1')
-    ws.merge_cells('U1:W1')
-    ws.merge_cells('K1:M1')
-    ws.merge_cells('X1:Z1')
-    ws.merge_cells('K1:M1')
-    ws.merge_cells('AA1:AC1')
-    ws.merge_cells('K1:M1')
-    ws.merge_cells('AD1:AE1')
-    ws.merge_cells('AF1:AH1')
+
+    for column in ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AF']:
+        ws.column_dimensions[column].width = 5
+
+    for column in ['C', 'D', 'E', 'F']:
+        ws.column_dimensions[column].width = 17
+
+    for column in ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH']:
+        ws.column_dimensions[column].width = 26
+
+    for column in ['I', 'L', 'S', 'V', 'Y', 'AB', 'AD']:
+        ws.column_dimensions[column].width = 40
+
+    for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'N1:O1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AE1', 'AF1:AH1']:
+        ws.merge_cells(range)
 
     return ws
 
@@ -269,7 +241,7 @@ def main():
     dir_list = []
 
     for file in  os.listdir(full_work_folder):
-        if file.endswith(".xlsx") or file.endswith(".xls"):
+        if file.endswith(".xlsx"):
             dir_list.append(file)
 
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
