@@ -55,10 +55,12 @@ def check_end(ws, start, col):
 def check_max_col(ws):
     no_end = True
     i = 8
+
     while no_end:
         if not ws['{}4'.format(openpyxl.utils.get_column_letter(i))].value:
             no_end = False
         i += 1
+        
     return openpyxl.utils.get_column_letter(i - 2)
 
 
@@ -78,9 +80,11 @@ def check_start_f(ws):
 def check_for_hide_colums(n, e, ws):
     to_hide = []
     col_range = list(string.ascii_lowercase)
+
     for i, col in enumerate(col_range):
         if '[Attr' in str(ws['{}{}'.format(col,n)].value):
             to_hide.append(col)
+            
     return(to_hide)
 
 
@@ -110,34 +114,43 @@ def next_alpha(s):
 
 def find_last_tab_2(ws):
     col_range = list(string.ascii_lowercase)
+    
     for c in col_range:
         if "Document Status" in str(ws['{}1'.format(c)].value) and c != "a" :
             return next_alpha(c)
+
     return "f"
 
 
 def find_last_tab(ws):
     col_range = list(string.ascii_lowercase)
+
     for c in col_range:
         if  "CERTEX" in str(ws['{}1'.format(c)].value):
             return c
+
     return "d"
 
 
 def column_letters():
     new_list = []
+
     for col in range(1,70):
         new_list.append(openpyxl.utils.get_column_letter(col))
+
     return new_list
 
-    
+
 def format_first_type(wb):
+    default_column_width = 25
+
     for ws_name in wb.sheetnames:
-        ws = wb[ws_name]             
-        default_column_width = 25
+        ws = wb[ws_name]                     
         ws.sheet_view.zoomScale = 70
+
         for i in list(string.ascii_lowercase):
             ws.column_dimensions[i].width = default_column_width
+
         n = check_start_a(ws) # start of first block
         m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
         end = check_end(ws, 8, 'A') # end of first block
@@ -155,6 +168,7 @@ def format_first_type(wb):
         ws.merge_cells('A1:{}{}'.format(e, n -1))
         ws.freeze_panes = '{}{}'.format(x, n+1)
         ws.row_dimensions[1].height = 30
+
     return wb
 
 
