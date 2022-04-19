@@ -269,7 +269,7 @@ def main():
     dir_list = []
 
     for file in  os.listdir(full_work_folder):
-        if file.endswith(".xlsx"):
+        if file.endswith(".xlsx") or file.endswith(".xls"):
             dir_list.append(file)
 
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
