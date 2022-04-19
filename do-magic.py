@@ -210,8 +210,8 @@ def format_information_result_recap(ws):
     ws.sheet_view.zoomScale = 70
     center_range(ws, 'a1:g30')
 
-    ws.row_dimensions[1].height = 30
-    ws.row_dimensions[2].height = 51
+    for col, height in [[1, 30], [2, 51]]:
+        ws.row_dimensions[col].height = height
 
     for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 29]]:
         ws.column_dimensions[col].width = width
