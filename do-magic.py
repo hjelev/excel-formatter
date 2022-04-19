@@ -213,8 +213,8 @@ def format_information_result_recap(ws):
     ws.row_dimensions[1].height = 30
     ws.row_dimensions[2].height = 51
 
-    for col, row in [['B', 43], ['G', 14], ['N', 29], ['AG', 29]]:
-        ws.column_dimensions[col].width = row
+    for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 29]]:
+        ws.column_dimensions[col].width = width
 
     for column in ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AF']:
         ws.column_dimensions[column].width = 5
