@@ -280,22 +280,19 @@ def main():
         elif "Spreadsheet Rules Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = column_letters()
+
+
+            for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6']]:
+                wb[wb.sheetnames[sheet]].freeze_panes = wb[wb.sheetnames[sheet]][cell]
+
             wb[wb.sheetnames[0]].column_dimensions['B'].width = 63.44
-            wb[wb.sheetnames[0]].freeze_panes = wb[wb.sheetnames[0]]['d6']
-            wb[wb.sheetnames[1]].freeze_panes = wb[wb.sheetnames[1]]['c6']
-            wb[wb.sheetnames[2]].freeze_panes = wb[wb.sheetnames[2]]['c6']
-            wb[wb.sheetnames[3]].freeze_panes = wb[wb.sheetnames[3]]['c5']
-            wb[wb.sheetnames[4]].freeze_panes = wb[wb.sheetnames[4]]['f6']
             wb[wb.sheetnames[4]].column_dimensions['B'].width = 36
             wb[wb.sheetnames[4]].column_dimensions['C'].width = 39
             wb[wb.sheetnames[4]].column_dimensions['D'].width = 43
-            wb[wb.sheetnames[5]].freeze_panes = wb[wb.sheetnames[5]]['c6']
             wb[wb.sheetnames[5]].column_dimensions['A'].width = 35
-            wb[wb.sheetnames[6]].freeze_panes = wb[wb.sheetnames[6]]['c6']
             wb[wb.sheetnames[6]].column_dimensions['A'].width = 15
-            wb[wb.sheetnames[7]].freeze_panes = wb[wb.sheetnames[7]]['d6']
             wb[wb.sheetnames[7]].column_dimensions['A'].width = 15
-            wb[wb.sheetnames[8]].freeze_panes = wb[wb.sheetnames[8]]['c6']
+
             wb[wb.sheetnames[8]].column_dimensions['A'].width = 15
             wb[wb.sheetnames[1]]['a6'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[2]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
@@ -319,7 +316,6 @@ def main():
                 ws.row_dimensions[2].height = 180
                 ws.row_dimensions[4].height = 180
                          
-
                 for column in col_range:
                     ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
                     ws['{}2'.format(column)].font = Font(size = '10', name='Dialog.plain')
