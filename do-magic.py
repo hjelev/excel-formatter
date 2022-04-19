@@ -10,7 +10,7 @@ from openpyxl.styles import Font
 warnings.simplefilter("ignore")
 
 def set_border(ws, cell_range):
-    thin = openpyxl.styles.Side(border_style="thin", color="757171")
+    thin = openpyxl.styles.Side(border_style="thin")
     for row in ws[cell_range]:
         for cell in row:
             cell.border = openpyxl.styles.Border(top=thin, left=thin, right=thin, bottom=thin)
@@ -19,12 +19,20 @@ def set_border(ws, cell_range):
 
 
 def set_header(ws, cell_range):
+    ws.row_dimensions[1].height = 30
     for row in ws[cell_range]:
         for cell in row:
             cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
             cell.font = cell.font.copy(color="000000")
-            cell.alignment = openpyxl.styles.Alignment(horizontal='center')
-
+            cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+            
+def set_header_font_size_14(ws, cell_range):
+    ws.row_dimensions[1].height = 30
+    for row in ws[cell_range]:
+        for cell in row:
+            cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
+            cell.font = cell.font.copy(color="000000", size = "14")
+            cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
 
 def check_end(ws, start, col):
     no_end = True
@@ -109,6 +117,7 @@ def format_first_type(ws):
     ws['A1'].font = Font(size="9", bold=True, italic=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
     ws.freeze_panes = '{}{}'.format(x, n+1)
+    ws.row_dimensions[1].height = 30
     return ws
 
 
@@ -119,10 +128,11 @@ def next_alpha(s):
 def format_information_result(ws, last_tab):
     default_column_width = 20
     end = check_end(ws, 1, 'B') + 1
+    
     for i in range(1, end):
         if ws['a1'].value == "ID":
             ws['a{}'.format(i)].alignment = Alignment(horizontal='center')
-        ws['{}{}'.format(last_tab, i)].alignment = Alignment(horizontal='center')
+        ws['{}{}'.format(last_tab, i)].alignment = Alignment(horizontal='center')     
 
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
@@ -139,10 +149,9 @@ def format_information_result(ws, last_tab):
 
     ws.column_dimensions[last_tab].width = 5
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
-    set_header(ws, 'A1:{}1'.format(last_tab))
+    set_header_font_size_14(ws, 'A1:{}1'.format(last_tab))
     ws.freeze_panes = ws['a2']
     return ws
-
 
 def format_status_table(ws, last_tab):
     default_column_width = 37
@@ -152,14 +161,14 @@ def format_status_table(ws, last_tab):
         ws['b1'].value = ws['a1'].value
         ws['b1'].font = Font(bold=True, name='Dialog.bold')
         ws['a1'].value = ""
-    set_header(ws, 'A1:{}2'.format(last_tab))
+    set_header_font_size_14(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
-        if i == "a" : ws.column_dimensions[i].width = "12"
+        if i == "a" : ws.column_dimensions[i].width = "13"
 
         if ("IDENTIFIER" in str(ws['{}2'.format(i)].value) or ws['{}1'.format(i)].value == "to") and (str(ws['{}3'.format(i)].value).isdigit() or str(ws['{}3'.format(i)].value) == 'None') :
-            ws.column_dimensions[i].width = "4"
+            ws.column_dimensions[i].width = "6"
             ws['{}2'.format(i)].alignment = Alignment(horizontal='left')
             ws['{}1'.format(i)].alignment = Alignment(horizontal='left')
     return ws
@@ -190,15 +199,15 @@ def column_letters():
     return new_list
 
 
-def format_information_result_reacap(ws):
+def format_information_result_recap(ws):
     ws.freeze_panes = ws['h3']
     ws.sheet_view.zoomScale = 70
-    ws['a1'].alignment = Alignment(horizontal='center', wrap_text = True)
-    ws['c2'].alignment = Alignment(horizontal='center', wrap_text = True)
-    ws['d2'].alignment = Alignment(horizontal='center', wrap_text = True)
-    ws['e2'].alignment = Alignment(horizontal='center', wrap_text = True)
-    ws['f2'].alignment = Alignment(horizontal='center', wrap_text = True) 
-    ws.row_dimensions[1].height = 40
+    ws['a1'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
+    ws['c2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
+    ws['d2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
+    ws['e2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True)
+    ws['f2'].alignment = Alignment(horizontal='center', vertical='center', wrap_text = True) 
+    ws.row_dimensions[1].height = 30
     ws.row_dimensions[2].height = 51
     ws.column_dimensions['A'].width = 5
     ws.column_dimensions['H'].width = 5
@@ -214,7 +223,7 @@ def format_information_result_reacap(ws):
     ws.column_dimensions['D'].width = 17
     ws.column_dimensions['E'].width = 17
     ws.column_dimensions['F'].width = 17
-    ws.column_dimensions['G'].width = 11
+    ws.column_dimensions['G'].width = 14
     ws.column_dimensions['I'].width = 40
     ws.column_dimensions['J'].width = 26
     ws.column_dimensions['L'].width = 40
@@ -272,7 +281,9 @@ def main():
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_first_type(ws)
+            
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+        
         elif "Information Result" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
@@ -282,8 +293,9 @@ def main():
                     ws = format_information_result(ws, find_last_tab(ws))                   
                 else:
                     ws = wb[ws_name]
-                    ws = format_information_result_reacap(ws)
+                    ws = format_information_result_recap(ws)
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+        
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
@@ -291,6 +303,7 @@ def main():
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_status_table(ws, find_last_tab_2(ws))
+            
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
         elif "Spreadsheet Rules Table" in filename:
@@ -302,16 +315,38 @@ def main():
             wb[wb.sheetnames[2]].freeze_panes = wb[wb.sheetnames[2]]['c6']
             wb[wb.sheetnames[3]].freeze_panes = wb[wb.sheetnames[3]]['c5']
             wb[wb.sheetnames[4]].freeze_panes = wb[wb.sheetnames[4]]['f6']
+            wb[wb.sheetnames[4]].column_dimensions['B'].width = 36
+            wb[wb.sheetnames[4]].column_dimensions['C'].width = 39
+            wb[wb.sheetnames[4]].column_dimensions['D'].width = 43
             wb[wb.sheetnames[5]].freeze_panes = wb[wb.sheetnames[5]]['c6']
+            wb[wb.sheetnames[5]].column_dimensions['A'].width = 35
             wb[wb.sheetnames[6]].freeze_panes = wb[wb.sheetnames[6]]['c6']
+            wb[wb.sheetnames[6]].column_dimensions['A'].width = 15
             wb[wb.sheetnames[7]].freeze_panes = wb[wb.sheetnames[7]]['d6']
+            wb[wb.sheetnames[7]].column_dimensions['A'].width = 15
+            wb[wb.sheetnames[8]].freeze_panes = wb[wb.sheetnames[8]]['c6']
+            wb[wb.sheetnames[8]].column_dimensions['A'].width = 15
+            wb[wb.sheetnames[1]]['a6'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[2]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[3]]['a5'].value = wb[wb.sheetnames[3]]['a1'].value
+            wb[wb.sheetnames[3]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[3]]['a5'].alignment = Alignment(horizontal='left')
+            wb[wb.sheetnames[3]]['a1'].value = ""
+            wb[wb.sheetnames[5]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[6]]['b5'].value = wb[wb.sheetnames[6]]['b1'].value
+            wb[wb.sheetnames[6]]['b5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[6]]['b1'].value = ""
+            wb[wb.sheetnames[7]]['b5'].value = wb[wb.sheetnames[7]]['b1'].value
+            wb[wb.sheetnames[7]]['b5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            wb[wb.sheetnames[7]]['b1'].value = ""
+            wb[wb.sheetnames[8]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
 
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.sheet_view.zoomScale = 70
                 ws.row_dimensions[1].height = 30 
-                ws.row_dimensions[2].height = 157.1
-                ws.row_dimensions[4].height = 157.1 
+                ws.row_dimensions[2].height = 180
+                ws.row_dimensions[4].height = 180
                          
 
                 for column in col_range:
