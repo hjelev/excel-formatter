@@ -287,28 +287,18 @@ def main():
 
             for sheet, col, width in [[0, 'B', 63.44], [4, 'B', 36], [4, 'C', 39], [4, 'D', 43], [5, 'A', 35], [6, 'A', 15], [7, 'A', 15], [8, 'A', 15]]:
                 wb[wb.sheetnames[sheet]].column_dimensions[col].width = width
-            # wb[wb.sheetnames[4]].column_dimensions['B'].width = 36
-            # wb[wb.sheetnames[4]].column_dimensions['C'].width = 39
-            # wb[wb.sheetnames[4]].column_dimensions['D'].width = 43
-            # wb[wb.sheetnames[5]].column_dimensions['A'].width = 35
-            # wb[wb.sheetnames[6]].column_dimensions['A'].width = 15
-            # wb[wb.sheetnames[7]].column_dimensions['A'].width = 15
-            # wb[wb.sheetnames[8]].column_dimensions['A'].width = 15
 
-            wb[wb.sheetnames[1]]['a6'].font = Font(bold=True, name='Dialog.bold', size=12)
-            wb[wb.sheetnames[2]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
+            for sheet, cell in [[1, 'A6'], [2, 'A5'], [3, 'A5'], [5, 'A5'], [6, 'B5'], [7, 'B5'], [8, 'A5']]:
+                wb[wb.sheetnames[sheet]][cell].font = Font(bold=True, name='Dialog.bold', size=12)
+                
             wb[wb.sheetnames[3]]['a5'].value = wb[wb.sheetnames[3]]['a1'].value
-            wb[wb.sheetnames[3]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
-            wb[wb.sheetnames[3]]['a5'].alignment = Alignment(horizontal='left')
             wb[wb.sheetnames[3]]['a1'].value = ""
-            wb[wb.sheetnames[5]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[6]]['b5'].value = wb[wb.sheetnames[6]]['b1'].value
-            wb[wb.sheetnames[6]]['b5'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[6]]['b1'].value = ""
             wb[wb.sheetnames[7]]['b5'].value = wb[wb.sheetnames[7]]['b1'].value
-            wb[wb.sheetnames[7]]['b5'].font = Font(bold=True, name='Dialog.bold', size=12)
             wb[wb.sheetnames[7]]['b1'].value = ""
-            wb[wb.sheetnames[8]]['a5'].font = Font(bold=True, name='Dialog.bold', size=12)
+
+            wb[wb.sheetnames[3]]['a5'].alignment = Alignment(horizontal='left')
 
             for name in wb.sheetnames:
                 ws = wb[name]
