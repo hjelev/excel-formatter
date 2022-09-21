@@ -62,8 +62,8 @@ def check_max_col(ws):
     return get_column_letter(i - 2)
 
 
-def check_start_a(ws):
-    for i in range(5, 19):
+def check_start_a(ws, start, end):
+    for i in range(start, end):
         if ws['a{}'.format(i)].value:
             return (i)
 
@@ -107,7 +107,31 @@ def format_first_type(ws):
     default_column_width = 25
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
-    n = check_start_a(ws) # start of first block
+    n = check_start_a(ws, 5 , 19) # start of first block
+    m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
+    end = check_end(ws, 8, 'A') # end of first block
+    col = check_max_col(ws) # end column
+    to_hide = check_for_hide_colums(n, e, ws)
+    ws = hide_cols(to_hide, ws)
+    to_hide = check_for_hide_rows(n, m, ws)
+    ws = hide_rows(to_hide, ws)    
+    set_border(ws, 'A{}:{}{}'.format(n, e, end))
+    set_border(ws, '{}1:{}{}'.format(m, col, end))
+    set_header(ws, 'A{}:{}{}'.format(n, e, n))
+    set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+    ws['A1'].alignment = Alignment(horizontal='left', vertical = 'top', wrap_text=True)
+    ws['A1'].font = Font(size="9", bold=True)
+    ws.merge_cells('A1:{}{}'.format(e, n -1))
+    ws.freeze_panes = '{}{}'.format(x, n+1)
+    ws.row_dimensions[1].height = 30
+    return ws
+
+
+def format_transformation_table(ws):
+    default_column_width = 25
+    for i in list(string.ascii_lowercase):
+        ws.column_dimensions[i].width = default_column_width
+    n = check_start_a(ws, 2 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
     col = check_max_col(ws) # end column
@@ -254,7 +278,16 @@ def main():
                 ws = format_first_type(ws)
             
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-        
+
+        if "Transformation Table" in filename and "Status" not in filename and "to" not in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for ws_name in wb.sheetnames:
+                ws = wb[ws_name]
+                ws.sheet_view.zoomScale = 70
+                ws = format_transformation_table(ws)
+            
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))      
+
         elif "Information Result" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
