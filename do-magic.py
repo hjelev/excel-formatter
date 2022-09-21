@@ -52,11 +52,11 @@ def check_end(ws, start, col):
         start += 1
 
 
-def check_max_col(ws):
+def check_max_col(ws, start_row):
     no_end = True
     i = 8
     while no_end:
-        if not ws['{}4'.format(get_column_letter(i))].value:
+        if not ws['{}{}'.format(get_column_letter(i), start_row)].value:
             no_end = False
         i += 1
     return get_column_letter(i - 2)
@@ -110,7 +110,7 @@ def format_first_type(ws):
     n = check_start_a(ws, 5 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
-    col = check_max_col(ws) # end column
+    col = check_max_col(ws, 4) # end column
     to_hide = check_for_hide_colums(n, e, ws)
     ws = hide_cols(to_hide, ws)
     to_hide = check_for_hide_rows(n, m, ws)
@@ -134,11 +134,12 @@ def format_transformation_table(ws):
     n = check_start_a(ws, 2 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
-    col = check_max_col(ws) # end column
+    col = check_max_col(ws, 2) # end column
     to_hide = check_for_hide_colums(n, e, ws)
     ws = hide_cols(to_hide, ws)
     to_hide = check_for_hide_rows(n, m, ws)
     ws = hide_rows(to_hide, ws)    
+    
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
     set_header(ws, 'A{}:{}{}'.format(n, e, n))
