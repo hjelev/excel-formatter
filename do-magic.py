@@ -246,7 +246,7 @@ def main():
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
 
     for filename in tqdm(dir_list, desc ="Work done: "):
-        if "Transformation Table" in filename and "Status" not in filename:
+        if "Transformation Table" in filename and "Status" not in filename and "to" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
@@ -306,7 +306,7 @@ def main():
                     wb[wb.sheetnames[sheet]][col_dest].value = ""
                 except:
                     pass
-                
+
             wb[wb.sheetnames[3]]['a5'].alignment = Alignment(horizontal='left')
 
             for name in wb.sheetnames:
