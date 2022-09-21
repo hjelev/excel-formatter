@@ -135,10 +135,10 @@ def format_transformation_table(ws):
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
     col = check_max_col(ws, 2) # end column
-    to_hide = check_for_hide_colums(n, e, ws)
-    ws = hide_cols(to_hide, ws)
-    to_hide = check_for_hide_rows(n, m, ws)
-    ws = hide_rows(to_hide, ws)    
+    # to_hide = check_for_hide_colums(n, e, ws)
+    # ws = hide_cols(to_hide, ws)
+    # to_hide = check_for_hide_rows(n, m, ws)
+    # ws = hide_rows(to_hide, ws)    
     
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
