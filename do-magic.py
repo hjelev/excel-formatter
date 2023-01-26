@@ -284,7 +284,7 @@ def main():
             
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-        if "Transformation Table" in filename and "Status" not in filename and "to" not in filename:
+        elif "Transformation Table" in filename and "Status" not in filename and "to" not in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
