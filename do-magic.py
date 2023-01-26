@@ -193,7 +193,7 @@ def format_status_table(ws, last_tab):
             ws['b1'].value = ws['a1'].value
             ws['b1'].font = Font(bold=True, name='Dialog.bold')
             ws['a1'].value = ""
-    except:
+    except AttributeError:
         pass
     set_header_font_size_14(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
