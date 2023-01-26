@@ -385,6 +385,12 @@ def main():
 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))       
         else:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for name in wb.sheetnames:
+                ws = wb[name]
+                ws.sheet_view.zoomScale = 70
+
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))             
             print(f'{filename} is not supported')
         
  
