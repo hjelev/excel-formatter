@@ -369,8 +369,8 @@ def main():
             ws.sheet_view.zoomScale = 70
             # ws.delete_rows(1, 1)
             for column in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
-                ws[f'{column}2'].font = Font(bold=True)
-                ws[f'{column}3'].font = Font(bold=True)
+                ws[f'{column}2'].font = Font(bold=True, name='Dialog.bold')
+                ws[f'{column}3'].font = Font(bold=True, name='Dialog.bold')
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
  
 if __name__ == '__main__':
