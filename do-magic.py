@@ -384,7 +384,8 @@ def main():
                 ws.sheet_view.zoomScale = 70
 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))       
-        
+        else:
+            print(f'{filename} is not supported')
         
  
 if __name__ == '__main__':
