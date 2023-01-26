@@ -188,10 +188,13 @@ def format_status_table(ws, last_tab):
     default_column_width = 37
     ws.merge_cells('b1:c1')
     ws.merge_cells('e1:f1')
-    if str(ws['b1'].value) == 'None':
-        ws['b1'].value = ws['a1'].value
-        ws['b1'].font = Font(bold=True, name='Dialog.bold')
-        ws['a1'].value = ""
+    try:
+        if str(ws['b1'].value) == 'None':
+            ws['b1'].value = ws['a1'].value
+            ws['b1'].font = Font(bold=True, name='Dialog.bold')
+            ws['a1'].value = ""
+    except:
+        pass
     set_header_font_size_14(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
