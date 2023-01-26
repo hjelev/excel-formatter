@@ -368,10 +368,24 @@ def main():
             ws = wb['Recap']
             ws.sheet_view.zoomScale = 70
             # ws.delete_rows(1, 1)
+            center_range(ws, 'A2:H3')
             for column in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
                 ws[f'{column}2'].font = Font(bold=True, name='Dialog.bold')
                 ws[f'{column}3'].font = Font(bold=True, name='Dialog.bold')
+                
+            for range in ['A2:A3', 'B2:B3', 'G2:G3', 'H2:H3']:
+                ws.merge_cells(range)              
+                 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+        elif "Spreadsheet Measurement Units Transformation" in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            for name in wb.sheetnames:
+                ws = wb[name]
+                ws.sheet_view.zoomScale = 70
+
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))       
+        
+        
  
 if __name__ == '__main__':
     main()
