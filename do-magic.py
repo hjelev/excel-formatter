@@ -195,6 +195,7 @@ def format_status_table(ws, last_tab):
             ws['a1'].value = ""
     except AttributeError:
         pass
+        
     set_header_font_size_14(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
@@ -361,7 +362,16 @@ def main():
                     ws['{}4'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-
+        elif "Spreadsheet Record Outcome" in filename:
+            wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
+            # for name in wb.sheetnames:
+            ws = wb['Recap']
+            ws.sheet_view.zoomScale = 70
+            # ws.delete_rows(1, 1)
+            for column in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+                ws[f'{column}2'].font = Font(bold=True)
+                ws[f'{column}3'].font = Font(bold=True)
+            wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
  
 if __name__ == '__main__':
     main()
