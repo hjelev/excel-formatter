@@ -18,12 +18,12 @@ def set_border(ws, cell_range):
             # cell.alignment = Alignment(wrap_text=True)
 
 
-def set_header(ws, cell_range):
+def set_header(ws, cell_range, color):
     ws.row_dimensions[1].height = 30
     for row in ws[cell_range]:
         for cell in row:
             cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
-            cell.font = cell.font.copy(color="000000")
+            cell.font = cell.font.copy(color=color)
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
 
 def center_range(ws, cell_range):
@@ -117,8 +117,8 @@ def format_first_type(ws):
     ws = hide_rows(to_hide, ws)    
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
-    set_header(ws, 'A{}:{}{}'.format(n, e, n))
-    set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+    set_header(ws, 'A{}:{}{}'.format(n, e, n), '000000')
+    set_header(ws, '{}1:{}{}'.format(m, m, n - 1), '000000')
     ws['A1'].alignment = Alignment(horizontal='left', vertical = 'top', wrap_text=True)
     ws['A1'].font = Font(size="9", bold=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
@@ -142,8 +142,8 @@ def format_transformation_table(ws):
     
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
-    set_header(ws, 'A{}:{}{}'.format(n, e, n))
-    set_header(ws, '{}1:{}{}'.format(m, m, n - 1))
+    set_header(ws, 'A{}:{}{}'.format(n, e, n), '000000')
+    set_header(ws, '{}1:{}{}'.format(m, m, n - 1), '000000')
     ws['A1'].alignment = Alignment(horizontal='left', vertical = 'top', wrap_text=True)
     ws['A1'].font = Font(size="9", bold=True)
     ws.merge_cells('A1:{}{}'.format(e, n -1))
@@ -186,8 +186,8 @@ def format_information_result(ws, last_tab):
 
 def format_status_table(ws, last_tab):
     default_column_width = 37
-    ws.merge_cells('b1:c1')
-    ws.merge_cells('e1:f1')
+    # ws.merge_cells('b1:c1')
+    # ws.merge_cells('e1:f1')
     try:
         if str(ws['b1'].value) == 'None':
             ws['b1'].value = ws['a1'].value
@@ -308,11 +308,12 @@ def main():
         elif "Status Transformation Table" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
-                # if "Statuses" not in ws_name:
+
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_status_table(ws, find_last_tab_2(ws))
             
+            set_header(wb['CERTEX Statuses'], 'C1:F2', '999999')
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
         elif "Spreadsheet Rules Table" in filename:
