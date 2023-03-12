@@ -104,13 +104,13 @@ def hide_rows(to_hide, ws):
 
 
 def format_first_type(ws):
-    default_column_width = 25
-    for i in list(string.ascii_lowercase):
-        ws.column_dimensions[i].width = default_column_width
+    # default_column_width = 25
+    # # for i in list(string.ascii_lowercase):
+    # #     ws.column_dimensions[i].width = default_column_width
     n = check_start_a(ws, 5 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
-    col = check_max_col(ws, 4) # end column
+    col = check_max_col(ws, 5) # end column
     to_hide = check_for_hide_colums(n, e, ws)
     ws = hide_cols(to_hide, ws)
     to_hide = check_for_hide_rows(n, m, ws)
@@ -281,7 +281,7 @@ def main():
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_first_type(ws)
-            
+
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
         elif "Transformation Table" in filename and "Status" not in filename and "to" not in filename:
