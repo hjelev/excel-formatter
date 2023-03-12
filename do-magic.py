@@ -64,14 +64,14 @@ def check_max_col(ws, start_row):
 
 def check_start_a(ws, start, end):
     for i in range(start, end):
-        if ws['a{}'.format(i)].value:
+        if ws['a{}'.format(i)].value and not (ws['a{}'.format(i)].value) == '.':
             return (i)
 
 
 def check_start_f(ws):
     col_range = list(string.ascii_lowercase)
     for i, n in enumerate(col_range):
-        if ws['{}2'.format(n)].value:
+        if ws['{}2'.format(n)].value  and not (ws['{}2'.format(n)].value) == '.':
             return col_range[i], col_range[i - 1], col_range[i + 1]
 
 def check_for_hide_colums(n, e, ws):
@@ -107,6 +107,7 @@ def format_first_type(ws):
     # default_column_width = 25
     # # for i in list(string.ascii_lowercase):
     # #     ws.column_dimensions[i].width = default_column_width
+    
     n = check_start_a(ws, 5 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
