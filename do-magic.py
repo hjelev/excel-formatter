@@ -175,9 +175,9 @@ def format_information_result(ws, last_tab):
         if ws['{}1'.format(i)].value == "Condition" :
             ws.column_dimensions[i].width = "28"
         elif ws['{}1'.format(i)].value == "Process" or ws['{}1'.format(i)].value == "C/E":
-            ws.column_dimensions[i].width = "10"
+            ws.column_dimensions[i].width = "19"
             for row in range(1, end):
-                ws['{}{}'.format(i, row)].alignment = Alignment(horizontal='center')
+                ws['{}{}'.format(i, row)].alignment = Alignment(horizontal='left')
 
     ws.column_dimensions[last_tab].width = 5
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
@@ -194,6 +194,13 @@ def format_status_table(ws, last_tab):
             ws['b1'].value = ws['a1'].value
             ws['b1'].font = Font(bold=True, name='Dialog.bold')
             ws['a1'].value = ""
+        else:
+            ws['b2'].font = Font(bold=True, name='Dialog.bold')
+            ws['c2'].font = Font(bold=True, name='Dialog.bold')
+            ws['d2'].font = Font(bold=True, name='Dialog.bold')
+            ws['e2'].font = Font(bold=True, name='Dialog.bold')
+            ws['f2'].font = Font(bold=True, name='Dialog.bold')           
+
     except AttributeError:
         pass
         
@@ -354,16 +361,21 @@ def main():
                 ws.sheet_view.zoomScale = 70
                 ws.row_dimensions[1].height = 30 
                 ws.row_dimensions[2].height = 180
-                ws.row_dimensions[4].height = 180
+                
                          
                 for column in col_range:
-                    ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
-                    ws['{}2'.format(column)].font = Font(size = '10', name='Dialog.plain')
-                    ws['{}4'.format(column)].font = Font(size = '10', name='Dialog.plain')
-                    ws['{}2'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
-                    ws['{}4'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
-
+                    if column != "a":
+                        ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
+                        ws['{}2'.format(column)].font = Font(size = '10', name='Dialog.plain')
+                        ws['{}2'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
+                        ws['{}4'.format(column)].font = Font(size = '12', name='Dialog.plain')
+                        if name != "ICG":
+                            ws['{}4'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
+                            ws['{}4'.format(column)].font = Font(size = '10', name='Dialog.plain')
+                            ws.row_dimensions[4].height = 180
+            
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
+
         elif "Spreadsheet Record Outcome" in filename:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             # for name in wb.sheetnames:
