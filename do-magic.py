@@ -283,7 +283,7 @@ def main():
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
 
     for filename in tqdm(dir_list, desc ="Work done: "):
-        if "Transformation Table" in filename and "Status" not in filename and "to" in filename:
+        if "Transformation Table".lower() in filename.lower() and "Status".lower() not in filename.lower() and "to" in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
@@ -292,7 +292,7 @@ def main():
 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-        elif "Transformation Table" in filename and "Status" not in filename and "to" not in filename:
+        elif "Transformation Table".lower() in filename.lower() and "Status".lower() not in filename.lower() and "to" not in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
@@ -301,7 +301,7 @@ def main():
             
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))      
 
-        elif "Information Result" in filename:
+        elif "Information Result".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 if "Recap" not in ws_name:
@@ -313,7 +313,7 @@ def main():
                     ws = format_information_result_recap(ws)
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
         
-        elif "Status Transformation Table" in filename:
+        elif "Status Transformation Table".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
 
@@ -324,7 +324,7 @@ def main():
             set_header(wb['CERTEX Statuses'], 'C1:F2', '999999')
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-        elif "Spreadsheet Rules Table" in filename:
+        elif "Spreadsheet Rules Table".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = column_letters()
             
@@ -376,7 +376,7 @@ def main():
             
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
 
-        elif "Spreadsheet Record Outcome" in filename:
+        elif "Spreadsheet Record Outcome".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             # for name in wb.sheetnames:
             ws = wb['Recap']
@@ -391,7 +391,7 @@ def main():
                 ws.merge_cells(range)              
                  
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-        elif "Spreadsheet Measurement Units Transformation" in filename:
+        elif "Spreadsheet Measurement Units Transformation".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for name in wb.sheetnames:
                 ws = wb[name]
