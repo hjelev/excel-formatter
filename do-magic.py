@@ -328,7 +328,7 @@ def main():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = column_letters()
             
-            for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6']]:
+            for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6'], [9, 'C6'], [10, 'C6'], [11, 'C6']]:
                 try:
                     wb[wb.sheetnames[sheet]].freeze_panes = wb[wb.sheetnames[sheet]][cell]
                 except:
@@ -369,7 +369,7 @@ def main():
                         ws['{}2'.format(column)].font = Font(size = '10', name='Dialog.plain')
                         ws['{}2'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
                         ws['{}4'.format(column)].font = Font(size = '12', name='Dialog.plain')
-                        if name != "ICG":
+                        if name != "ICG" and not name.startswith("CBAM"):
                             ws['{}4'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
                             ws['{}4'.format(column)].font = Font(size = '10', name='Dialog.plain')
                             ws.row_dimensions[4].height = 180
