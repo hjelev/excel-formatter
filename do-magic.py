@@ -249,7 +249,6 @@ def format_information_result_recap(ws):
     format_column_dimensions(ws, 17, ['C', 'D', 'E', 'F'])
     format_column_dimensions(ws, 25, ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH', 'AK', 'AL'])
     format_column_dimensions(ws, 39, ['I', 'L', 'S', 'V', 'Y', 'AB', 'AE', 'AG'])
-
     for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AF1', 'AG1:AH1']:
         ws.merge_cells(range)
     return ws
@@ -260,13 +259,10 @@ def main():
     work_folder = "work"
     full_work_folder = os.path.join(os.path.dirname(os.path.realpath(__file__)), work_folder, "")
     dir_list = []
-
     for file in  os.listdir(full_work_folder):
         if file.endswith(".xlsx"):
             dir_list.append(file)
-
     print("Formatting all {} .xlsx files found in {}".format(len(dir_list), full_work_folder))   
-
     for filename in tqdm(dir_list, desc ="Work done: "):
         if "Transformation Table".lower() in filename.lower() and "Status".lower() not in filename.lower() and "to" in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
@@ -274,18 +270,14 @@ def main():
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_first_type(ws)
-
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-
         elif "Transformation Table".lower() in filename.lower() and "Status".lower() not in filename.lower() and "to" not in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_transformation_table(ws)
-            
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))      
-
         elif "Information Result".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
@@ -297,55 +289,44 @@ def main():
                     ws = wb[ws_name]
                     ws = format_information_result_recap(ws)
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-        
         elif "Status Transformation Table".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for ws_name in wb.sheetnames:
-
                 ws = wb[ws_name]
                 ws.sheet_view.zoomScale = 70
                 ws = format_status_table(ws, find_last_tab_2(ws))
-            
             set_header(wb['CERTEX Statuses'], 'C1:F2', '999999')
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-
         elif "Spreadsheet Rules Table".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             col_range = column_letters()
-            
             for sheet, cell in [[0, 'D6'], [1, 'C6'], [2, 'C6'], [3, 'C5'], [4, 'F6'], [5, 'C6'], [6, 'C6'], [7, 'D6'], [8, 'C6'], [9, 'C6'], [10, 'C6'], [11, 'C6']]:
                 try:
                     wb[wb.sheetnames[sheet]].freeze_panes = wb[wb.sheetnames[sheet]][cell]
                 except:
                     pass
-
             for sheet, col, width in [[0, 'B', 63.44], [4, 'B', 36], [4, 'C', 39], [4, 'D', 43], [5, 'A', 35], [6, 'A', 15], [7, 'A', 15], [8, 'A', 15]]:
                 try:
                     wb[wb.sheetnames[sheet]].column_dimensions[col].width = width
                 except:
                     pass
-
             for sheet, cell in [[1, 'A6'], [2, 'A5'], [3, 'A5'], [5, 'A5'], [6, 'B5'], [7, 'B5'], [8, 'A5']]:
                 try:
                     wb[wb.sheetnames[sheet]][cell].font = Font(bold=True, name='Dialog.bold', size=12)
                 except:
                     pass
-                
             for sheet, col_source, col_dest in [[3, 'A5', 'A1'], [6, 'B5', 'B1'], [7, 'B5', 'B1']]:
                 try:
                     wb[wb.sheetnames[sheet]][col_source].value = wb[wb.sheetnames[sheet]][col_dest].value
                     wb[wb.sheetnames[sheet]][col_dest].value = ""
                 except:
                     pass
-
             wb[wb.sheetnames[3]]['a5'].alignment = Alignment(horizontal='left')
-
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.sheet_view.zoomScale = 70
                 ws.row_dimensions[1].height = 30 
                 ws.row_dimensions[2].height = 180
-                 
                 for column in col_range:
                     if column != "a":
                         ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
@@ -356,9 +337,7 @@ def main():
                             ws['{}4'.format(column)].alignment = Alignment(textRotation = 90, horizontal='left', wrap_text = True)
                             ws['{}4'.format(column)].font = Font(size = '10', name='Dialog.plain')
                             ws.row_dimensions[4].height = 180
-            
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
-
         elif "Spreadsheet Record Outcome".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             # for name in wb.sheetnames:
@@ -372,21 +351,18 @@ def main():
                 
             for range in ['A2:A3', 'B2:B3', 'G2:G3', 'H2:H3']:
                 ws.merge_cells(range)              
-                 
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))
         elif "Spreadsheet Measurement Units Transformation".lower() in filename.lower():
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.sheet_view.zoomScale = 70
-
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))       
         else:
             wb = openpyxl.load_workbook(os.path.join(full_work_folder, filename))
             for name in wb.sheetnames:
                 ws = wb[name]
                 ws.sheet_view.zoomScale = 70
-
             wb.save(os.path.join(os.path.dirname(os.path.realpath(__file__)), done_folder, filename))             
             print(f'{filename} is not supported')
         
