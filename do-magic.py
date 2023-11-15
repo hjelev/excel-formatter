@@ -245,27 +245,27 @@ def column_letters():
 def format_information_result_recap(ws):
     ws.freeze_panes = ws['h3']
     ws.sheet_view.zoomScale = 70
-    center_range(ws, 'a1:g30')
+    center_range(ws, 'a1:g37')
 
     for col, height in [[1, 30], [2, 51]]:
         ws.row_dimensions[col].height = height
 
-    for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 29]]:
+    for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 39]]:
         ws.column_dimensions[col].width = width
 
-    for column in ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AF']:
+    for column in ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AI']:
         ws.column_dimensions[column].width = 5
 
     for column in ['C', 'D', 'E', 'F']:
         ws.column_dimensions[column].width = 17
 
-    for column in ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH']:
-        ws.column_dimensions[column].width = 26
+    for column in ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH', 'AK', 'AL']:
+        ws.column_dimensions[column].width = 25
 
-    for column in ['I', 'L', 'S', 'V', 'Y', 'AB', 'AD']:
-        ws.column_dimensions[column].width = 40
+    for column in ['I', 'L', 'S', 'V', 'Y', 'AB', 'AE', 'AG']:
+        ws.column_dimensions[column].width = 39
 
-    for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AE1', 'AF1:AH1']:
+    for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AF1', 'AG1:AH1']:
         ws.merge_cells(range)
 
     return ws
