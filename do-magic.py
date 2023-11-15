@@ -26,11 +26,13 @@ def set_header(ws, cell_range, color):
             cell.font = cell.font.copy(color=color)
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
 
+
 def center_range(ws, cell_range):
     ws.row_dimensions[1].height = 30
     for row in ws[cell_range]:
         for cell in row:
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center', wrap_text=True)
+
 
 def set_header_font_size_14(ws, cell_range):
     ws.row_dimensions[1].height = 30
@@ -39,6 +41,7 @@ def set_header_font_size_14(ws, cell_range):
             cell.fill = openpyxl.styles.PatternFill(start_color="ffffff", fill_type="solid")
             cell.font = cell.font.copy(color="000000", size = "14")
             cell.alignment = openpyxl.styles.Alignment(horizontal='center', vertical='center')
+
 
 def check_end(ws, start, col):
     no_end = True
@@ -74,6 +77,7 @@ def check_start_f(ws):
         if ws['{}2'.format(n)].value  and not (ws['{}2'.format(n)].value) == '.':
             return col_range[i], col_range[i - 1], col_range[i + 1]
 
+
 def check_for_hide_colums(n, e, ws):
     to_hide = []
     col_range = list(string.ascii_lowercase)
@@ -104,7 +108,6 @@ def hide_rows(to_hide, ws):
 
 
 def format_first_type(ws):
-    
     n = check_start_a(ws, 5 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
@@ -133,8 +136,6 @@ def format_transformation_table(ws):
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
     col = check_max_col(ws, 2) # end column
-  
-    
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
     set_header(ws, 'A{}:{}{}'.format(n, e, n), '000000')
@@ -154,12 +155,10 @@ def next_alpha(s):
 def format_information_result(ws, last_tab):
     default_column_width = 20
     end = check_end(ws, 1, 'B') + 1
-    
     for i in range(1, end):
         if ws['a1'].value == "ID":
             ws['a{}'.format(i)].alignment = Alignment(horizontal='center')
         ws['{}{}'.format(last_tab, i)].alignment = Alignment(horizontal='center')     
-
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
         ws['{}1'.format(i)].font = Font(bold=True, name='Dialog.bold')
@@ -173,17 +172,15 @@ def format_information_result(ws, last_tab):
             ws.column_dimensions[i].width = "19"
             for row in range(1, end):
                 ws['{}{}'.format(i, row)].alignment = Alignment(horizontal='left')
-
     ws.column_dimensions[last_tab].width = 5
     ws.merge_cells('{}1:{}1'.format(last_tab, next_alpha(last_tab)))
     set_header_font_size_14(ws, 'A1:{}1'.format(last_tab))
     ws.freeze_panes = ws['a2']
     return ws
 
+
 def format_status_table(ws, last_tab):
     default_column_width = 37
-    # ws.merge_cells('b1:c1')
-    # ws.merge_cells('e1:f1')
     try:
         if str(ws['b1'].value) == 'None':
             ws['b1'].value = ws['a1'].value
@@ -195,10 +192,8 @@ def format_status_table(ws, last_tab):
             ws['d2'].font = Font(bold=True, name='Dialog.bold')
             ws['e2'].font = Font(bold=True, name='Dialog.bold')
             ws['f2'].font = Font(bold=True, name='Dialog.bold')           
-
     except AttributeError:
         pass
-        
     set_header_font_size_14(ws, 'A1:{}2'.format(last_tab))
     ws.freeze_panes = ws['a3']
     for i in list(string.ascii_lowercase):
@@ -227,14 +222,15 @@ def find_last_tab(ws):
             return c
     return "d"
 
+
 def column_letters():
     col_range = list(string.ascii_lowercase)
     new_list = list(string.ascii_lowercase)
-
     for c in col_range:
         for letter in col_range:
             new_list.append(c + letter)
     return new_list
+
 
 def format_column_dimensions(ws, width, range):
     for column in range:
@@ -245,13 +241,10 @@ def format_information_result_recap(ws):
     ws.freeze_panes = ws['h3']
     ws.sheet_view.zoomScale = 70
     center_range(ws, 'a1:g37')
-
     for col, height in [[1, 30], [2, 51]]:
         ws.row_dimensions[col].height = height
-
     for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 39]]:
         ws.column_dimensions[col].width = width
-
     format_column_dimensions(ws, 5, ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AI'])
     format_column_dimensions(ws, 17, ['C', 'D', 'E', 'F'])
     format_column_dimensions(ws, 25, ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH', 'AK', 'AL'])
@@ -259,8 +252,8 @@ def format_information_result_recap(ws):
 
     for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AF1', 'AG1:AH1']:
         ws.merge_cells(range)
-
     return ws
+
 
 def main():
     done_folder = "done"
@@ -338,7 +331,6 @@ def main():
                 except:
                     pass
                 
-
             for sheet, col_source, col_dest in [[3, 'A5', 'A1'], [6, 'B5', 'B1'], [7, 'B5', 'B1']]:
                 try:
                     wb[wb.sheetnames[sheet]][col_source].value = wb[wb.sheetnames[sheet]][col_dest].value
@@ -353,8 +345,7 @@ def main():
                 ws.sheet_view.zoomScale = 70
                 ws.row_dimensions[1].height = 30 
                 ws.row_dimensions[2].height = 180
-                
-                         
+                 
                 for column in col_range:
                     if column != "a":
                         ws['{}1'.format(column)].font = Font(size = '14', bold = True, name='Dialog.bold')
