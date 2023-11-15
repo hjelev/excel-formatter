@@ -168,6 +168,7 @@ def format_information_result(ws, last_tab):
 
     for i in list(string.ascii_lowercase):
         ws.column_dimensions[i].width = default_column_width
+        ws['{}1'.format(i)].font = Font(bold=True, name='Dialog.bold')
         if ws['a1'].value == "ID" and i == "a":
             ws.column_dimensions[i].width = "5"
         if ws['{}1'.format(i)].value == "Status" :
