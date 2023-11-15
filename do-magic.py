@@ -104,9 +104,6 @@ def hide_rows(to_hide, ws):
 
 
 def format_first_type(ws):
-    # default_column_width = 25
-    # # for i in list(string.ascii_lowercase):
-    # #     ws.column_dimensions[i].width = default_column_width
     
     n = check_start_a(ws, 5 , 19) # start of first block
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
@@ -136,10 +133,7 @@ def format_transformation_table(ws):
     m, e , x = check_start_f(ws) # m = start column of second block; e = end column of first block; x = freeze column
     end = check_end(ws, 8, 'A') # end of first block
     col = check_max_col(ws, 2) # end column
-    # to_hide = check_for_hide_colums(n, e, ws)
-    # ws = hide_cols(to_hide, ws)
-    # to_hide = check_for_hide_rows(n, m, ws)
-    # ws = hide_rows(to_hide, ws)    
+  
     
     set_border(ws, 'A{}:{}{}'.format(n, e, end))
     set_border(ws, '{}1:{}{}'.format(m, col, end))
@@ -242,6 +236,10 @@ def column_letters():
             new_list.append(c + letter)
     return new_list
 
+def format_column_dimensions(ws, width, range):
+    for column in range:
+        ws.column_dimensions[column].width = width
+
 
 def format_information_result_recap(ws):
     ws.freeze_panes = ws['h3']
@@ -254,17 +252,10 @@ def format_information_result_recap(ws):
     for col, width in [['B', 43], ['G', 14], ['N', 29], ['AG', 39]]:
         ws.column_dimensions[col].width = width
 
-    for column in ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AI']:
-        ws.column_dimensions[column].width = 5
-
-    for column in ['C', 'D', 'E', 'F']:
-        ws.column_dimensions[column].width = 17
-
-    for column in ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH', 'AK', 'AL']:
-        ws.column_dimensions[column].width = 25
-
-    for column in ['I', 'L', 'S', 'V', 'Y', 'AB', 'AE', 'AG']:
-        ws.column_dimensions[column].width = 39
+    format_column_dimensions(ws, 5, ['A', 'H', 'K', 'R', 'U', 'X', 'AA', 'AD', 'AI'])
+    format_column_dimensions(ws, 17, ['C', 'D', 'E', 'F'])
+    format_column_dimensions(ws, 25, ['J', 'M', 'O', 'Q', 'T', 'W', 'Z', 'AC', 'AE', 'AH', 'AK', 'AL'])
+    format_column_dimensions(ws, 39, ['I', 'L', 'S', 'V', 'Y', 'AB', 'AE', 'AG'])
 
     for range in ['A1:B1', 'C1:F1', 'H1:J1', 'K1:M1', 'P1:Q1', 'R1:T1', 'U1:W1', 'X1:Z1', 'AA1:AC1', 'AD1:AF1', 'AG1:AH1']:
         ws.merge_cells(range)
